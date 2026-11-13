@@ -6,4 +6,5 @@ include:
   - board: xiao_rp2040//zmk
     shield: totem_right
     cmake-args: -DZMK_EXTRA_MODULES=${GITHUB_WORKSPACE}/totem-module
+    snippet: zmk-usb-logging
 # there is no settingsreset (needed) for the XIAO
