@@ -9,7 +9,7 @@ config ZMK_KEYBOARD_NAME
 config ZMK_SPLIT_ROLE_CENTRAL
     default y
 
-config CONFIG_ZMK_SPLIT_WIRED_UART_MODE_POLLING
+config ZMK_SPLIT_WIRED_UART_MODE_POLLING
     default y
 
 endif
