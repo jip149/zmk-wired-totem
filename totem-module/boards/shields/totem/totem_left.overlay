@@ -18,3 +18,38 @@
         , <&xiao_d 8 GPIO_ACTIVE_HIGH>
         ;
 };
+
+&pinctrl {
+    pio1_uart_default: pio1_uart_default {
+        rx_pins {
+            pinmux = <PIO1_P1>;
+            input-enable;
+            bias-pull-up;
+        };
+        tx_pins {
+            pinmux = <PIO1_P0>;
+        };
+    };
+};
+
+&pio1 {
+    status = "okay";
+
+    pio_uart: pio_uart {
+        compatible = "raspberrypi,pico-uart-pio";
+        pinctrl-0 = <&pio1_uart_default>;
+        pinctrl-names = "default";
+        current-speed = <115200>;
+        status = "okay";
+    };
+};
+
+/* Disable hardware UART0 on the right half since we use PIO UART instead */
+&uart0 {
+    status = "disabled";
+};
+
+/* Override the wired_split device to use PIO UART */
+&wired_split {
+    device = <&pio_uart>;
+};
