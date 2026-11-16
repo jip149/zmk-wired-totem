@@ -18,9 +18,6 @@
         device = <&xiao_serial>;
     };
 
-    /* Re-enable hardware UART0 for wired split (disabled by the xiao_rp2040//zmk variant) */
-    &xiao_serial { status = "okay"; };
-
     default_transform: keymap_transform_0 {
         compatible = "zmk,matrix-transform";
         columns = <10>;
