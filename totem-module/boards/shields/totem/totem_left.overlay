@@ -6,6 +6,8 @@
 
 #include "totem.dtsi"
 
+/* Re-enable hardware UART0 for wired split (disabled by the xiao_rp2040//zmk variant) */
+&xiao_serial { status = "okay"; };
 
 &kscan0 {
     col-gpios
