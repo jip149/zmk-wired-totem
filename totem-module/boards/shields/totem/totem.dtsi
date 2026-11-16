@@ -16,8 +16,10 @@
     wired_split: wired_split {
         compatible = "zmk,wired-split";
         device = <&xiao_serial>;
-        // half-duplex;
     };
+
+    /* Re-enable hardware UART0 for wired split (disabled by the xiao_rp2040//zmk variant) */
+    &xiao_serial { status = "okay"; };
 
     default_transform: keymap_transform_0 {
         compatible = "zmk,matrix-transform";
