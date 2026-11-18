@@ -1,5 +1,5 @@
 file_format: "1"
-id: totem
+id: totem-wired
 name: TOTEM
 type: shield
 url: https://github.com/GEIGEIGEIST/TOTEM
@@ -7,5 +7,5 @@ requires: [xiao_rp2040]
 features:
   - keys
 siblings:
-  - totem_left
-  - totem_right
+  - totem-wired_left
+  - totem-wired_right

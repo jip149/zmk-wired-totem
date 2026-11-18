@@ -11,14 +11,14 @@
 
 SHELL := /bin/bash
 
-DOCKER_IMG := totem-zmk
+DOCKER_IMG := totem-wired-zmk
 BOARD := xiao_rp2040//zmk
 OUTDIR := $(CURDIR)/firmware
 STRIP_SVG_LABELS ?= layer
-UF2_LEFT := $(OUTDIR)/totem_left.uf2
-UF2_RIGHT := $(OUTDIR)/totem_right.uf2
-DRAW_YAML := $(OUTDIR)/totem.yaml
-DRAW_SVG := $(OUTDIR)/totem.svg
+UF2_LEFT := $(OUTDIR)/totem-wired_left.uf2
+UF2_RIGHT := $(OUTDIR)/totem-wired_right.uf2
+DRAW_YAML := $(OUTDIR)/totem-wired.yaml
+DRAW_SVG := $(OUTDIR)/totem-wired.svg
 UF2_VOLUME := /Volumes/RPI-RP2
 
 .PHONY: all left right draw clean flash-left flash-right docker-build

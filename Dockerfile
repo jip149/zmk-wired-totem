@@ -1,16 +1,16 @@
 # Multi-stage Dockerfile for building TOTEM ZMK firmware + keymap diagrams.
 #
 # Usage:
-#   docker build -t totem-zmk .
-#   docker run --rm -v $(pwd)/firmware:/out totem-zmk              # build both halves + draw
-#   docker run --rm -v $(pwd)/firmware:/out totem-zmk left          # left half only
-#   docker run --rm -v $(pwd)/firmware:/out totem-zmk right         # right half only
-#   docker run --rm -v $(pwd)/firmware:/out totem-zmk draw          # keymap diagram only
-#   docker run --rm -v $(pwd)/firmware:/out totem-zmk all           # everything
+#   docker build -t totem-wired-zmk .
+#   docker run --rm -v $(pwd)/firmware:/out totem-wired-zmk              # build both halves + draw
+#   docker run --rm -v $(pwd)/firmware:/out totem-wired-zmk left          # left half only
+#   docker run --rm -v $(pwd)/firmware:/out totem-wired-zmk right         # right half only
+#   docker run --rm -v $(pwd)/firmware:/out totem-wired-zmk draw          # keymap diagram only
+#   docker run --rm -v $(pwd)/firmware:/out totem-wired-zmk all           # everything
 #
 # Outputs are copied to the mounted /out directory:
-#   firmware/totem_left.uf2, firmware/totem_right.uf2
-#   firmware/totem.svg, firmware/overview.svg, firmware/totem.yaml
+#   firmware/totem-wired_left.uf2, firmware/totem-wired_right.uf2
+#   firmware/totem-wired.svg, firmware/overview.svg, firmware/totem-wired.yaml
 
 # ── Stage 1: ZMK build image + keymap-drawer ────────────────────────────────
 
@@ -43,7 +43,7 @@ FROM workspace AS builder
 
 # Copy full config tree, module, and draw scripts.
 COPY config/ config/
-COPY totem-module/ totem-module/
+COPY totem-wired-module/ totem-wired-module/
 COPY keymap_drawer.config.yaml .
 COPY draw/ draw/
 
@@ -51,8 +51,8 @@ ARG BOARD=xiao_rp2040//zmk
 ENV ZMK_APP=zmk/app
 ENV BOARD=${BOARD}
 ENV ZMK_CONFIG=/zmk-config/config
-ENV KEYMAP_FILE=config/totem.keymap
-ENV ZMK_EXTRA_MODULES=/zmk-config/totem-module
+ENV KEYMAP_FILE=config/totem-wired.keymap
+ENV ZMK_EXTRA_MODULES=/zmk-config/totem-wired-wired-module
 ENV ZEPHYR_BASE=/zmk-config/zephyr
 ENV STRIP_SVG_LABELS=layer
 
@@ -67,19 +67,19 @@ OUTDIR="/out"
 build_left() {
     echo "=== Building left half ==="
     west build -s "$ZMK_APP" -d build/left -b "$BOARD" -- \
-        -DSHIELD=totem_left -DZMK_CONFIG="$ZMK_CONFIG" \
+        -DSHIELD=totem-wired_left -DZMK_CONFIG="$ZMK_CONFIG" \
         -DZMK_EXTRA_MODULES="$ZMK_EXTRA_MODULES"
-    cp build/left/zephyr/zmk.uf2 "$OUTDIR/totem_left.uf2"
-    echo "=== Left half: $OUTDIR/totem_left.uf2 ==="
+    cp build/left/zephyr/zmk.uf2 "$OUTDIR/totem-wired_left.uf2"
+    echo "=== Left half: $OUTDIR/totem-wired_left.uf2 ==="
 }
 
 build_right() {
     echo "=== Building right half ==="
     west build -s "$ZMK_APP" -d build/right -b "$BOARD" -- \
-        -DSHIELD=totem_right -DZMK_CONFIG="$ZMK_CONFIG" \
+        -DSHIELD=totem-wired_right -DZMK_CONFIG="$ZMK_CONFIG" \
         -DZMK_EXTRA_MODULES="$ZMK_EXTRA_MODULES"
-    cp build/right/zephyr/zmk.uf2 "$OUTDIR/totem_right.uf2"
-    echo "=== Right half: $OUTDIR/totem_right.uf2 ==="
+    cp build/right/zephyr/zmk.uf2 "$OUTDIR/totem-wired_right.uf2"
+    echo "=== Right half: $OUTDIR/totem-wired_right.uf2 ==="
 }
 
 draw_keymap() {
@@ -89,14 +89,14 @@ draw_keymap() {
     layer_tmp="$(mktemp -d)"
     keymap -c keymap_drawer.config.yaml parse \
         -z "$KEYMAP_FILE" -c 10 \
-        > draw/totem.raw.yaml
-    python3 draw/combo_layer.py < draw/totem.raw.yaml > draw/totem.yaml
-    python3 draw/make_overview.py draw/totem.raw.yaml draw/totem-overview.yaml
-    python3 draw/split_layers.py draw/totem.raw.yaml "$layer_tmp" --prefix totem
-    python3 draw/make_layer_combo.py draw/totem.raw.yaml draw/totem-base-combo.yaml Base
-    keymap -c keymap_drawer.config.yaml draw draw/totem.yaml > draw/totem.svg
-    keymap -c keymap_drawer.config.yaml draw draw/totem-overview.yaml > draw/overview.svg
-    keymap -c keymap_drawer.config.yaml draw draw/totem-base-combo.yaml > draw/totem-base-combo.svg
+        > draw/totem-wired.raw.yaml
+    python3 draw/combo_layer.py < draw/totem-wired.raw.yaml > draw/totem-wired.yaml
+    python3 draw/make_overview.py draw/totem-wired.raw.yaml draw/totem-wired-overview.yaml
+    python3 draw/split_layers.py draw/totem-wired.raw.yaml "$layer_tmp" --prefix totem-wired
+    python3 draw/make_layer_combo.py draw/totem-wired.raw.yaml draw/totem-wired-base-combo.yaml Base
+    keymap -c keymap_drawer.config.yaml draw draw/totem-wired.yaml > draw/totem-wired.svg
+    keymap -c keymap_drawer.config.yaml draw draw/totem-wired-overview.yaml > draw/overview.svg
+    keymap -c keymap_drawer.config.yaml draw draw/totem-wired-base-combo.yaml > draw/totem-wired-base-combo.svg
     rm -f draw/layers/*.svg
     for layer_yaml in "$layer_tmp"/*.yaml; do
         layer_svg="draw/layers/$(basename "${layer_yaml%.yaml}.svg")"
@@ -111,11 +111,11 @@ draw_keymap() {
         esac
     done
     python3 draw/hide_layer_labels.py --mode layer < draw/overview.svg > draw/overview.svg.tmp && mv draw/overview.svg.tmp draw/overview.svg
-    python3 draw/hide_layer_labels.py --mode layer < draw/totem-base-combo.svg > draw/totem-base-combo.svg.tmp && mv draw/totem-base-combo.svg.tmp draw/totem-base-combo.svg
-    cp draw/totem.yaml draw/totem.svg draw/overview.svg draw/totem-base-combo.svg "$OUTDIR/"
+    python3 draw/hide_layer_labels.py --mode layer < draw/totem-wired-base-combo.svg > draw/totem-wired-base-combo.svg.tmp && mv draw/totem-wired-base-combo.svg.tmp draw/totem-wired-base-combo.svg
+    cp draw/totem-wired.yaml draw/totem-wired.svg draw/overview.svg draw/totem-wired-base-combo.svg "$OUTDIR/"
     cp draw/layers/*.svg "$OUTDIR/"
-    rm -rf "$layer_tmp" draw/totem.raw.yaml draw/totem-base-combo.yaml draw/totem-overview.yaml
-    echo "=== Keymap diagram: $OUTDIR/totem.svg ==="
+    rm -rf "$layer_tmp" draw/totem-wired.raw.yaml draw/totem-wired-base-combo.yaml draw/totem-wired-overview.yaml
+    echo "=== Keymap diagram: $OUTDIR/totem-wired.svg ==="
 }
 
 mkdir -p "$OUTDIR"

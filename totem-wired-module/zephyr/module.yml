@@ -1,4 +1,4 @@
-name: zmk-keyboard-totem
+name: zmk-keyboard-totem-wired
 build:
   cmake: zephyr
   kconfig: zephyr/Kconfig

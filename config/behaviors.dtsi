@@ -19,7 +19,7 @@
 
 /* Homerow mods */
 
-// KEYS_L, KEYS_R, THUMBS (and THUMBS_L, THUMBS_R) defined by zmk-helpers/key-labels/totem.h.
+// KEYS_L, KEYS_R, THUMBS (and THUMBS_L, THUMBS_R) defined by zmk-helpers/key-labels/totem-wired.h.
 
 #define MAKE_HRM(NAME, HOLD, TAP, TRIGGER_POS)                                 \
   ZMK_HOLD_TAP(NAME, bindings = <HOLD>, <TAP>; flavor = "balanced";            \

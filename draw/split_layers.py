@@ -16,7 +16,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("input_yaml")
     parser.add_argument("output_dir")
-    parser.add_argument("--prefix", default="totem")
+    parser.add_argument("--prefix", default="totem-wired")
     parser.add_argument("--combos-name", default="Combos")
     args = parser.parse_args()
 
