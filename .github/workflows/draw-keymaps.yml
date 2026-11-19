@@ -37,7 +37,7 @@ jobs:
           mkdir -p draw draw/layers
           layer_tmp="$(mktemp -d)"
           keymap -c keymap_drawer.config.yaml parse \
-            -z config/totem-wired.keymap -c 10 \
+            -z totem -c 10 \
             > draw/totem-wired.raw.yaml
           python3 draw/combo_layer.py < draw/totem-wired.raw.yaml > draw/totem-wired.yaml
           python3 draw/make_overview.py draw/totem-wired.raw.yaml draw/totem-wired-overview.yaml
