@@ -1,8 +1,8 @@
 # Copyright (c) 2022 The ZMK Contributors
 # SPDX-License-Identifier: MIT
 
-config SHIELD_WIRED_TOTEM_LEFT
+config SHIELD_TOTEM_WIRED_LEFT
     def_bool $(shields_list_contains,totem-wired_left)
 
-config SHIELD_WIRED_TOTEM_RIGHT
+config SHIELD_TOTEM_WIRED_RIGHT
     def_bool $(shields_list_contains,totem-wired_right)
