@@ -39,19 +39,19 @@ jobs:
           mkdir -p draw draw/layers
           layer_tmp="$(mktemp -d)"
           keymap -c keymap_drawer.config.yaml parse \
-            -z config/totem-wired.keymap -d totem-wired-module/boards/shields/totem-wired/totem-wired.dtsi -c 10 \
+            -z config/totem-wired.keymap -c 10 \
             > draw/totem-wired.raw.yaml
           python3 draw/combo_layer.py < draw/totem-wired.raw.yaml > draw/totem-wired.yaml
           python3 draw/make_overview.py draw/totem-wired.raw.yaml draw/totem-wired-overview.yaml
           python3 draw/split_layers.py draw/totem-wired.raw.yaml "$layer_tmp" --prefix totem-wired
           python3 draw/make_layer_combo.py draw/totem-wired.raw.yaml draw/totem-wired-base-combo.yaml Base
-          keymap -c keymap_drawer.config.yaml draw draw/totem-wired.yaml > draw/totem-wired.svg
-          keymap -c keymap_drawer.config.yaml draw draw/totem-wired-overview.yaml > draw/overview.svg
-          keymap -c keymap_drawer.config.yaml draw draw/totem-wired-base-combo.yaml > draw/totem-wired-base-combo.svg
+          keymap -c keymap_drawer.config.yaml draw -d totem-wired-module/boards/shields/totem-wired/totem-wired.dtsi draw/totem-wired.yaml > draw/totem-wired.svg
+          keymap -c keymap_drawer.config.yaml draw -d totem-wired-module/boards/shields/totem-wired/totem-wired.dtsi draw/totem-wired-overview.yaml > draw/overview.svg
+          keymap -c keymap_drawer.config.yaml draw -d totem-wired-module/boards/shields/totem-wired/totem-wired.dtsi draw/totem-wired-base-combo.yaml > draw/totem-wired-base-combo.svg
           rm -f draw/layers/*.svg
           for layer_yaml in "$layer_tmp"/*.yaml; do
             layer_svg="draw/layers/$(basename "${layer_yaml%.yaml}.svg")"
-            keymap -c keymap_drawer.config.yaml draw "$layer_yaml" > "$layer_svg"
+            keymap -c keymap_drawer.config.yaml draw -d totem-wired-module/boards/shields/totem-wired/totem-wired.dtsi "$layer_yaml" > "$layer_svg"
             case "$STRIP_SVG_LABELS" in
               all)
                 python3 draw/hide_layer_labels.py --mode all < "$layer_svg" > "$layer_svg.tmp" && mv "$layer_svg.tmp" "$layer_svg"
